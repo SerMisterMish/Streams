@@ -1,4 +1,0 @@
-type an int, a float and a string: integer = 657
-float = 43
-string = 87543nhcgah             
-
