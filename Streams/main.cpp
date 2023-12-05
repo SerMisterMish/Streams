@@ -1,12 +1,66 @@
-﻿#include <iostream>
-#include <vector>
-#include <string>
-#include <sstream>
+﻿#include "DataFrame.h"
 #include <fstream>
-#include "DataFrame.h"
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
 
 int main()
 {
-	std::ifstream input("input.txt");
-	DataFrame df(input);
+    // Correct case with excess whitespace
+    std::ifstream input1("input1.txt");
+
+    // Incorrect case with NA
+    std::ifstream input2("input2.txt");
+
+    // Incorrect case with NaN
+    std::ifstream input3("input3.txt");
+
+    // Incorrect case with too many elements in a row
+    std::ifstream input4("input4.txt");
+
+    DataFrame df;
+    try
+    {
+        std::cout << "Input 1:\n";
+        df.fill_df(input1);
+        std::cout << df << std::endl;
+    }
+    catch (std::exception &e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
+
+    try
+    {
+        std::cout << "Input 2:\n";
+        df.fill_df(input2);
+        std::cout << df << std::endl;
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
+
+    try
+    {
+        std::cout << "Input 3:\n";
+        df.fill_df(input3);
+        std::cout << df << std::endl;
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
+
+    try
+    {
+        std::cout << "Input 4:\n";
+        df.fill_df(input4);
+        std::cout << df << std::endl;
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
 }
