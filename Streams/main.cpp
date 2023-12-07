@@ -19,6 +19,9 @@ int main()
     // Incorrect case with too many elements in a row
     std::ifstream input4("input4.txt");
 
+    // Incorrect case with an empty data frame
+    std::ifstream input5("input5.txt");
+
     DataFrame df;
     try
     {
@@ -26,7 +29,7 @@ int main()
         df.fill_df(input1);
         std::cout << df << std::endl;
     }
-    catch (std::exception &e)
+    catch (invalid_data_frame &e)
     {
         std::cerr << e.what() << std::endl;
     }
@@ -37,7 +40,7 @@ int main()
         df.fill_df(input2);
         std::cout << df << std::endl;
     }
-    catch (std::exception& e)
+    catch (invalid_data_frame &e)
     {
         std::cerr << e.what() << std::endl;
     }
@@ -48,7 +51,7 @@ int main()
         df.fill_df(input3);
         std::cout << df << std::endl;
     }
-    catch (std::exception& e)
+    catch (invalid_data_frame &e)
     {
         std::cerr << e.what() << std::endl;
     }
@@ -59,7 +62,26 @@ int main()
         df.fill_df(input4);
         std::cout << df << std::endl;
     }
-    catch (std::exception& e)
+    catch (empty_data_frame& e) 
+    {
+        std::cerr << e.what() << std::endl;
+    }
+    catch (invalid_data_frame &e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
+
+    try
+    {
+        std::cout << "Input 5:\n";
+        df.fill_df(input5);
+        std::cout << df << std::endl;
+    }
+    catch (empty_data_frame& e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
+    catch (invalid_data_frame& e)
     {
         std::cerr << e.what() << std::endl;
     }

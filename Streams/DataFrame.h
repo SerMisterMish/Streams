@@ -6,6 +6,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "DataFrameExceptions.h"
+
 
 class DataFrame
 {
@@ -14,28 +16,22 @@ class DataFrame
 
     DataFrame(std::istream &input)
     {
-        try
-        {
-            fill_df(input);
-        }
-        catch (const std::exception &e)
-        {
-            throw;
-        }
+        fill_df(input);
     }
 
     DataFrame(const std::string &file_name)
     {
 
+        std::ifstream input(file_name);
         try
         {
-            std::ifstream input(file_name);
-            fill_df(input);
+            input.exceptions(input.failbit);
         }
-        catch (const std::exception &e)
+        catch (std::ios_base::failure &)
         {
             throw;
         }
+        fill_df(input);
     }
 
     std::vector<std::string> get_names() const
@@ -63,7 +59,7 @@ class DataFrame
 
     void fill_df(std::istream &input)
     {
-        if (!_names.empty()) 
+        if (!_names.empty())
         {
             _names.clear();
             _values.clear();
@@ -76,7 +72,7 @@ class DataFrame
         ss << input_string;
         if (!ss)
         {
-            throw std::exception("Empty input");
+            throw empty_data_frame();
         }
         while (ss)
         {
@@ -91,8 +87,8 @@ class DataFrame
 
         size_t rows{};
         std::getline(input, input_string);
-        if (!input)
-            throw std::exception("No numbers provided");
+        if (!input || input_string.find_first_not_of(" \t\n") == std::string::npos)
+            throw empty_data_frame("No numbers provided");
         while (input)
         {
             ss.ignore(std::numeric_limits<std::streamsize>::max());
@@ -105,10 +101,10 @@ class DataFrame
                 switch (ss.rdstate())
                 {
                 case std::ios_base::failbit:
-                    throw std::exception(("Encountered NaN in row " + std::to_string(rows + 1)).c_str());
+                    throw invalid_data_frame("Encountered NaN in row " + std::to_string(rows + 1));
                 case std::ios_base::eofbit:
                     if (i != _cols - 1)
-                        throw std::exception(("Too little elements in row " + std::to_string(rows + 1)).c_str());
+                        throw invalid_data_frame("Too little elements in row " + std::to_string(rows + 1));
                     break;
                 case std::ios_base::goodbit:
                 default:
@@ -121,7 +117,7 @@ class DataFrame
                 ss >> tmp;
                 if (!tmp.empty())
                 {
-                    throw std::exception(("Too many elements in row " + std::to_string(rows + 1)).c_str());
+                    throw invalid_data_frame("Too many elements in row " + std::to_string(rows + 1));
                 }
             }
 
