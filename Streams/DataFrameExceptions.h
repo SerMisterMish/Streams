@@ -13,7 +13,7 @@ public:
     invalid_data_frame(const invalid_data_frame& other) noexcept : domain_error(other) {};
     invalid_data_frame& operator=(const invalid_data_frame& other) noexcept
     {
-        *static_cast<domain_error*>(this) = other;
+        std::domain_error::operator=(other);
         return *this;
     }
 
@@ -34,7 +34,7 @@ public:
     empty_data_frame(const empty_data_frame& other) noexcept : invalid_data_frame(other) {};
     empty_data_frame& operator=(const empty_data_frame& other) noexcept
     {
-        *static_cast<invalid_data_frame*>(this) = other;
+        invalid_data_frame::operator=(other);
         return *this;
     }
     
